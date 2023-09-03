@@ -1,10 +1,11 @@
 export const wrapper={
     width:'100%',
     height:"100vh",
-    backgroundColor:"pink",
+    backgroundColor:"#77737399",
     display:"flex",
     alignItems:"center",
-    justifyContent:"center"
+    justifyContent:"center",
+    
 
 }
 export const container={
@@ -29,4 +30,9 @@ export const formControl={
         outline: '1px solid green', // Remove the outline on focus
         border:"none",
       },
+}
+export const warning={
+    fontSize:"18px",
+    fontWeight:'600',
+    color:"#000000"
 }

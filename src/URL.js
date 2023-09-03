@@ -1,0 +1,1 @@
+export const Api_URL ="http://localhost:5050/api/auth/"

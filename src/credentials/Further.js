@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { further } from "../Features/User";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import {wrapper,container, styledLabel, button} from '../style'
-
-
+import { wrapper, container, styledLabel, button } from "../style";
+import { Api_URL } from "../URL";
+import axios from "axios";
 
 const initial = {
   age: "",
@@ -30,11 +30,35 @@ const Further = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("okay", user);
-    dispatch(further(user));
-    navigate("/profile");
+    const form = e.currentTarget;
+  
+    if (form.checkValidity() === false) {
+      setValidated(true); // Show validation errors
+      return;
+    }
+  
+    // Reset validation status
+    setValidated(false);
+
+      const email = sessionStorage.getItem("email");
+      console.log("email", email);
+      e.preventDefault();
+      try {
+        const response = await axios.patch(`${Api_URL}update/${email}`, user);
+        console.log("response", response);
+        if (response.status === 200) {
+          console.log("okay", user);
+          dispatch(further(user));
+          
+        } else {
+          console.error("Resource update failed");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    
   };
   return (
     <div style={wrapper}>
@@ -42,8 +66,8 @@ const Further = () => {
         <Form onSubmit={handleSubmit} noValidate validated={validated}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label style={styledLabel}>Enter your age</Form.Label>
-             <Form.Control  
-      required
+            <Form.Control
+              required
               type="number"
               value={user.age}
               name="age"
@@ -76,8 +100,8 @@ const Further = () => {
 
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label style={styledLabel}>Date of Birth</Form.Label>
-             <Form.Control  
-      required
+            <Form.Control
+              required
               type="date"
               value={user.dob}
               name="dob"
@@ -88,8 +112,8 @@ const Further = () => {
 
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label style={styledLabel}>Contact Number</Form.Label>
-             <Form.Control  
-      required
+            <Form.Control
+              required
               type="number"
               value={user.mobile}
               name="mobile"
