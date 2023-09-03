@@ -4,8 +4,14 @@ import { login } from '../Features/User'
 import { useNavigate } from 'react-router-dom'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Toast from 'react-bootstrap/Toast';
+import {wrapper,container, styledLabel, button, formControl} from '../style'
+
 
 const Login = () => {
+
+    const [validated, setValidated] = useState(false);
+    const [show,setShow] = useState(false)
     const [user,setUser] = useState({
         email:'',
         password:'',
@@ -24,6 +30,14 @@ const Login = () => {
         })
     }
     const handleSubmit=(e)=>{
+        const form =  e.currentTarget;
+        if (form.checkValidity() === false) {
+           e.preventDefault();
+           e.stopPropagation();
+          
+        }
+    
+        setValidated(true);
         e.preventDefault();
 
         if(userData.email === user.email && userData.password === user.password)
@@ -32,26 +46,20 @@ const Login = () => {
         navigate('/further')
         }
         else{
-            alert("login failed")
+            setShow(true)
         }
     }
-  return (
-    <div>
-        {/* <form >
-        <input 
-        type="email"
-         name="email"
-          value={user.email} 
-          onChange={handlechange} 
-          placeholder='Enter your email'/>
-        <input type="password" name="password" value={user.password} onChange={handlechange} placeholder='Enter your password '/> 
-        <button type= "submit">Submit</button>
-        </form> */}
 
-        <Form onSubmit={handleSubmit}>
-      <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Label>Email address</Form.Label>
+  return (
+    <div style={wrapper}>
+        
+        <div style={container}>
+        <Form onSubmit={handleSubmit} noValidate validated={validated}>
+      <Form.Group className="mb-3" controlId="formBasicEmail" >
+        <Form.Label style={styledLabel}>Email address</Form.Label>
         <Form.Control 
+        style={formControl}
+        required
         type="email"
         name="email"
         value={user.email} 
@@ -62,8 +70,9 @@ const Login = () => {
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Label>Password</Form.Label>
-        <Form.Control 
+        <Form.Label style={styledLabel}>Password</Form.Label>
+        <Form.Control  
+            required
         name="password"
          value={user.password} 
          onChange={handlechange}
@@ -72,10 +81,26 @@ const Login = () => {
           />
       </Form.Group>
      
-      <Button variant="primary" type="submit">
+      <Button variant="primary" type="submit" style={button}>
         Submit
       </Button>
     </Form>
+
+    {
+        show ? ( <Toast>
+            <Toast.Header>
+              <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
+              <strong className="me-auto">Alert</strong>
+              {/* <small>11 mins ago</small> */}
+            </Toast.Header>
+            <Toast.Body>Please Enter same Email and password</Toast.Body>
+          </Toast>):('')
+    }
+
+        </div>
+        
+
+        
     </div>
   )
 }
