@@ -138,7 +138,7 @@ const handleSubmit = async (e) => {
               name="confirmPassword"
               onChange={handleChange}
               placeholder="Enter confirm Password"
-              pattern=".{8,}$"
+              pattern={user.password}
             />
           </Form.Group>
           {!passwordsMatch && (
