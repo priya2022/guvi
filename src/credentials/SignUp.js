@@ -123,6 +123,7 @@ const handleSubmit = async (e) => {
               name="password"
               onChange={handleChange}
               placeholder="Enter your Password"
+              pattern=".{8,}$"
             />
           </Form.Group>
           {alert && <div style={{ color: 'red' }}>Password must be at least 8 characters long.</div>}
@@ -137,6 +138,7 @@ const handleSubmit = async (e) => {
               name="confirmPassword"
               onChange={handleChange}
               placeholder="Enter confirm Password"
+              pattern=".{8,}$"
             />
           </Form.Group>
           {!passwordsMatch && (
