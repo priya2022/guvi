@@ -32,19 +32,7 @@ const SignUp = () => {
       ...user,
       [name]: value, // Update the state based on the input's name
     });
-    if (name === 'password' && value.length < 8) {
-        setAlert(true);
-      } else {
-        setAlert(false);
-      }
-
-      if (name === 'confirmPassword') {
-        if (value === user.password) {
-          setPasswordsMatch(true);
-        } else {
-          setPasswordsMatch(false);
-        }
-      }
+    
     
   };
 
@@ -58,6 +46,18 @@ const handleSubmit = async (e) => {
       setValidated(true); // Show validation errors
       return;
     }
+
+    if (user.password.length < 8) {
+      setAlert(true);
+      return;
+    }
+    
+  
+    if (user.confirmPassword !== user.password) {
+      setPasswordsMatch(false);
+      return;
+    }
+   
   
     // Reset validation status
     setValidated(false);
@@ -76,7 +76,7 @@ const handleSubmit = async (e) => {
         console.log("Registration successful");
         
         dispatch(signup(userValues));
-        navigate("/login");
+        navigate("/");
       } else {
         console.error("Error registering user");
       }

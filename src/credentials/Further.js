@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { further } from "../Features/User";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import Toast from 'react-bootstrap/Toast';
 import { wrapper, container, styledLabel, button } from "../style";
 import { Api_URL } from "../URL";
 import axios from "axios";
@@ -14,10 +15,17 @@ const initial = {
   dob: "",
   mobile: "",
 };
-
+const toastMsg={
+  backgroundColor:"lightgreen",
+  color:"black",
+  fontSize:"18px",
+}
 const Further = () => {
   const [user, setUser] = useState(initial);
   const [validated, setValidated] = useState(false);
+  const [show,setShow]=useState(false)
+
+  const toggleShow=()=>setShow(!show)
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -51,6 +59,7 @@ const Further = () => {
         if (response.status === 200) {
           console.log("okay", user);
           dispatch(further(user));
+          setShow(true)
           
         } else {
           console.error("Resource update failed");
@@ -125,6 +134,20 @@ const Further = () => {
           <Button variant="primary" type="submit" style={button}>
             Submit
           </Button>
+
+      {
+      show && (<>
+        <Toast onClose={toggleShow} style={toastMsg}>
+      <Toast.Header>
+        <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
+        <strong className="me-auto">Success</strong>
+      </Toast.Header>
+      <Toast.Body>Data has been added successfully.</Toast.Body>
+    </Toast>
+      </>)
+      
+      }
+        
         </Form>
       </div>
     </div>
@@ -132,3 +155,6 @@ const Further = () => {
 };
 
 export default Further;
+
+
+
