@@ -20,7 +20,7 @@ const toastMsg={
   color:"black",
   fontSize:"18px",
 }
-const Further = () => {
+const Further = ({dark}) => {
   const [user, setUser] = useState(initial);
   const [validated, setValidated] = useState(false);
   const [show,setShow]=useState(false)
@@ -70,7 +70,7 @@ const Further = () => {
     
   };
   return (
-    <div style={wrapper}>
+    <div style={wrapper(dark)}>
       <div style={container}>
         <Form onSubmit={handleSubmit} noValidate validated={validated}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -86,7 +86,7 @@ const Further = () => {
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label style={styledLabel}>Gender</Form.Label>
+            <Form.Label style={styledLabel}>Gender</Form.Label> &nbsp;
             <Form.Check
               inline
               type="radio"

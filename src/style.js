@@ -1,13 +1,19 @@
-export const wrapper={
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100&family=Raleway:ital,wght@1,300&display=swap');
+
+</style>
+export const wrapper=(dark)=>({
     width:'100%',
-    height:"100vh",
-    backgroundColor:"#77737399",
+    minHeight:"100vh",
+    backgroundColor: dark ? "black" :"#77737399",
     display:"flex",
     alignItems:"center",
     justifyContent:"center",
+    color:dark ? 'white':'black',
+    fontFamily: "'Montserrat','Raleway', sans-serif "
     
 
-}
+})
 export const container={
     width:'50%',
     maxHeight:"100%",
@@ -15,11 +21,15 @@ export const container={
 }
 export const styledLabel={
     fontWeight:'600',
-    fontSize:"20px"
+    fontSize:"20px",
+    fontFamily: "'Montserrat','Raleway', sans-serif "
+
 }
 export const button={
     fontWeight:'600',
-    width:"100%"
+    width:"100%",
+    backgroundColor:"blue"
+
 }
 
 export const formControl={
@@ -31,8 +41,8 @@ export const formControl={
         border:"none",
       },
 }
-export const warning={
+export const warning=(dark)=>({
     fontSize:"18px",
     fontWeight:'600',
-    color:"#000000"
-}
+    color:dark? "white":"#000000"
+})

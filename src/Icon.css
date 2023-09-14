@@ -1,0 +1,24 @@
+.iconWrapper{
+    position: absolute;
+    top:20px;
+    right: 50px;
+}
+.bi{
+    border:none;
+    outline:none
+}
+.iconClass{
+    border:none;
+    font-size:32px;
+    background-color: transparent;
+}
+.iconClass .bi-brightness-high-fill{
+    color:gold !important;
+
+}
+.iconClass .bi-moon-stars-fill{
+    color:black !important;
+
+
+}
+

@@ -9,13 +9,19 @@ import { wrapper, container, styledLabel, button, formControl, warning } from ".
 import { Api_URL } from "../URL";
 import axios from "axios";
 
-const Login = () => {
+
+
+const Login = ({dark}) => {
   const [validated, setValidated] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
   const [show, setShow] = useState(false);
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
+
+  
 
   const userData = useSelector((state) => state.user.value);
   const dispatch = useDispatch();
@@ -28,6 +34,7 @@ const Login = () => {
       [name]: value,
     });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -41,24 +48,42 @@ const Login = () => {
     setValidated(false);
 
     try {
-        const response = await axios.post(`${Api_URL}login`, user);
-        if (response.status === 200) {
-          console.log("Login successful");
+      const response = await axios.post(`${Api_URL}login`, user);
+      console.log('Response:', response); // Add this log to check the response
+    
+      if (response.status === 200) {
+        const responseData = response.data;
+        console.log('Response Data:', responseData); // Add this log to check the responseData
+        if (responseData.auth) {
+          console.log('Login successful');
           dispatch(login(user));
           navigate("/further");
           sessionStorage.setItem("email", user.email);
+          // Handle successful login (e.g., store user data or redirect)
         } else {
-          setShow(true);
-
-          console.error("Login failed");
+          console.log('Invalid email or password');
+          setErrorMessage('Invalid email or password'); // Set the error message
         }
-      } catch (error) {
-        console.error("Error:", error);
+      } else {
+        console.error('Login failed with status:', response.status);
+        // Handle other status codes (e.g., show a generic error message)
+        if (response.status === 500) {
+          setErrorMessage('Server error');
+          // Handle server errors
+          // You can also check the response.data for more information on the server error
+        } else if (response.status === 200) {
+          setErrorMessage('auth is false');
+          // Handle cases where the server responded with 200 but auth is false
+          // You can use response.data for more information
+        }
       }
-  };
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
 
   return (
-    <div style={wrapper}>
+    <div style={wrapper(dark)}>
       <div style={container}>
         <Form onSubmit={handleSubmit} noValidate validated={validated}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -86,9 +111,9 @@ const Login = () => {
             />
           </Form.Group>
 
-          <p style={warning}>If not signed Up please <Link to="/signup" >sign up</Link></p>
+          <p style={warning(dark)}>If not signed Up please <Link to="/signup" >Sign up</Link></p>
           
-          
+          {errorMessage && <div id="error-message">{errorMessage}</div>}
 
           <Button variant="primary" type="submit" style={button}>
             Submit
@@ -116,4 +141,5 @@ const Login = () => {
   );
 };
 
-export default Login;
+
+export default Login

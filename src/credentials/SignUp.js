@@ -15,13 +15,15 @@ const initial = {
   confirmPassword: "",
 };
 
-const SignUp = () => {
+const SignUp = ({dark}) => {
   const [validated, setValidated] = useState(false);
   const [alert, setAlert] = useState(false);
   const [passwordsMatch, setPasswordsMatch] = useState(true);
 
 
   const [user, setUser] = useState(initial);
+  const [errorMessage, setErrorMessage] = useState('');
+
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -39,8 +41,9 @@ const SignUp = () => {
 
 
 const handleSubmit = async (e) => {
-    e.preventDefault();
-    const form = e.currentTarget;
+  e.preventDefault();
+  const form = e.currentTarget;
+
   
     if (form.checkValidity() === false) {
       setValidated(true); // Show validation errors
@@ -51,43 +54,55 @@ const handleSubmit = async (e) => {
       setAlert(true);
       return;
     }
-    
-  
+
     if (user.confirmPassword !== user.password) {
       setPasswordsMatch(false);
       return;
     }
-   
-  
+
     // Reset validation status
     setValidated(false);
-  
+
     const userValues = {
       name: user.name,
       email: user.email,
       password: user.password,
     };
-  
-    try {
-     
-      const response = await axios.post(`${Api_URL}register`, userValues);
-  
-      if (response.status === 200) {
-        console.log("Registration successful");
-        
+
+    try{
+      const response = await fetch(`${Api_URL}register`,{
+        method:"POST",
+        headers:{
+          'Content-Type':'application/json',
+        },
+        body:JSON.stringify(userValues)
+      });
+
+      if(response.ok){
+        console.log('Registration successful');
         dispatch(signup(userValues));
-        navigate("/");
-      } else {
-        console.error("Error registering user");
+        navigate('/');
+        setErrorMessage("Registration Successful")
       }
-    } catch (error) {
-      console.error("Error:", error);
+      else if(response.status === 409){
+        const data = await response.json();
+        setErrorMessage(data.Error)
+      }
+      else{
+        const data = await response.json()
+        setErrorMessage(data)
+      }
+     
+    }
+    catch(error){
+      console.error('Error:',error)
     }
   };
+
   
 
   return (
-    <div style={wrapper}>
+    <div style={wrapper(dark)}>
       <div style={container}>
         <Form onSubmit={handleSubmit} noValidate validated={validated}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -112,7 +127,9 @@ const handleSubmit = async (e) => {
               onChange={handleChange}
               placeholder="Enter your Email"
             />
+          <Form.Control.Feedback type="invalid">Please Enter Formatted Email !</Form.Control.Feedback>
           </Form.Group>
+
 
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label style={styledLabel}>Password</Form.Label>
@@ -125,8 +142,11 @@ const handleSubmit = async (e) => {
               placeholder="Enter your Password"
               pattern=".{8,}$"
             />
+             <Form.Control.Feedback type="invalid">
+              Password must be 8 characters long.
+            </Form.Control.Feedback>
           </Form.Group>
-          {alert && <div style={{ color: 'red' }}>Password must be at least 8 characters long.</div>}
+         
 
 
           <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -140,12 +160,15 @@ const handleSubmit = async (e) => {
               placeholder="Enter confirm Password"
               pattern={user.password}
             />
+            <Form.Control.Feedback type="invalid">
+              Password Do not match.
+            </Form.Control.Feedback>
           </Form.Group>
-          {!passwordsMatch && (
-          <div style={{ color: 'red' }}>Passwords do not match.</div>
-        )}
 
-            <p style={warning}>Already Registered <Link to="/">Log In</Link> </p>
+          <p style={warning(dark)}>Already Registered! <Link to="/" >Login </Link></p>
+          
+         {errorMessage && <p>{errorMessage}</p>}
+
 
           <Button variant="primary" type="submit" style={button}>
             Submit

@@ -22,7 +22,15 @@ router.get('/users',(req,res)=>{
 })
 
 // Register
-router.post('/register',(req,res) => {
+router.post('/register',async(req,res) => {
+
+    const existingUser = await User.findOne({ email: req.body.email });
+
+    if (existingUser) {
+        
+      // If a user with the same email exists, return an error
+      return res.status(400).send('User with this email already exists');
+    }
     // encrypt password
     let hashPassword = bcrypt.hashSync(req.body.password,8);
     User.create({
